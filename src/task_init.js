@@ -1,11 +1,14 @@
 const exec = require('child_process').execSync;
 const fs = require('fs');
 
+
+
+
 vmake.tasks.init = function () {
   vmake.mkdirs("src");
 
   if (!fs.existsSync("vmake.js"))
-    fs.writeFileSync("vmake.js", `// more help: ....
+    fs.writeFileSync("vmake.js", `// more help: https://github.com/dyesorrow/vmake
 vmake.target("app", "bin", (dest) => {
     dest.add_cxxflag("-g");
     dest.add_cxxflag("-std=c++17");
@@ -14,7 +17,7 @@ vmake.target("app", "bin", (dest) => {
     dest.add_cxxflag("-Wall");
     dest.add_cxxflag("-Wextra");
 
-    dest.add_package("http://localhost:19901/vmake-repo", {
+    dest.add_package("${vmake.global_config("repo", "http://localhost:19901/vmake-repo")}", {
       "log": "1.0.0",
       "json": "1.0.0",
       "regexp": "1.0.0",
@@ -26,8 +29,7 @@ vmake.target("app", "bin", (dest) => {
     dest.add_objs("res/icon/icon.o");
 
     dest.add_ldflag("-static");
-    dest.add_ldflag("-lsqlite3 -ldl");
-    dest.add_ldflag("-lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive");
+    dest.add_ldflag("-ldl -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive");
 
     dest.add_before(()=>{
         console.log("todo something");

@@ -8,7 +8,9 @@ global.vmake = {
     tasks: {},
     util: {},
     debug: function (fmt, ...args) {
-        // console.log(fmt, ...args);
+        if (vmake.global_config("debug", false)) {
+            console.log(fmt, ...args);
+        }
     },
     info: function (fmt, ...args) {
         console.log(printf("\u001b[38;5;86m" + fmt + "\u001b[0m", ...args));;

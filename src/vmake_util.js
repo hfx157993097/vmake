@@ -131,6 +131,21 @@ function time_format(time) {
     return result;
 }
 
+function global_config(name, default_val) {
+    const USER_HOME = process.env.HOME || process.env.USERPROFILE;
+    let config = {};
+    if (fs.existsSync(USER_HOME + "/.vmake")) {
+        config = JSON.parse(fs.readFileSync(USER_HOME + "/.vmake").toString());
+    }
+    if (!config[name]) {
+        config[name] = default_val;
+        fs.writeFileSync(USER_HOME + "/.vmake", JSON.stringify(config, null, 4));
+        return default_val;
+    } else {
+        return config[name];
+    }
+}
+
 vmake.util.get_content = get_content;
 vmake.util.time_format = time_format;
 
@@ -140,6 +155,8 @@ vmake.md5sum = md5sum;
 vmake.run = run;
 vmake.copy = copy;
 vmake.rm = rm;
+vmake.global_config = global_config;
+
 
 
 
