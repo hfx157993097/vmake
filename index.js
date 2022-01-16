@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const printf = require("printf");
+
+
+global.vmake = {
+    args: process.argv.splice(2),
+    tasks: {},
+    util: {},
+    debug: function (fmt, ...args) {
+        // console.log(fmt, ...args);
+    },
+    info: function (fmt, ...args) {
+        console.log(printf("\u001b[38;5;86m" + fmt + "\u001b[0m", ...args));;
+    },
+    warn: function (fmt, ...args) {
+        console.log(printf("\u001b[1;33m" + fmt + "\u001b[0m", ...args));;
+    },
+    error: function (fmt, ...args) {
+        console.log(printf("\u001b[1;31m" + fmt + "\u001b[0m", ...args));;
+    },
+    success: function (fmt, ...args) {
+        console.log(printf("\u001b[1;32m" + fmt + "\u001b[0m", ...args));;
+    },
+};
+
+require("./src/vmake_util.js");
+require("./src/task_build.js");
+require("./src/task_help.js");
+require("./src/task_init.js");
+require("./src/task_publish.js");
+
+vmake.debug("%s", vmake.args);
+
+try {
+    if (vmake.args.length == 0) {
+        vmake.tasks.build();
+    } else {
+        if (vmake.tasks[vmake.args[0]]) {
+            vmake.tasks[vmake.args[0]]();
+        } else {
+            vmake.tasks.help();
+        }
+    }
+} catch (error) {
+    vmake.error("%s", error);
+}
+
+
+
